@@ -16,8 +16,8 @@ class node
     node<T>(T in_value) //Tenemos el constructor de la clase
     {
         this->value = in_value; //Guarda el valor en el nodo
-        this->previous = NULL;
-        this->next = NULL;
+        this->previous = nullptr;
+        this->next = nullptr;
     }
 
     void operator =(node<T> new_node)
@@ -45,7 +45,7 @@ class linked_list
     shared_ptr<node<T>> At_Node(int index)
     {
         if (index < 0 || index >= count) //En caso de que esté fuera de los índices posibles
-            return NULL;                 //retornamos NULL
+            return nullptr;                 //retornamos NULL
 
 
     //La idea ahora será buscar el nodo desde first o desde last,
@@ -87,8 +87,8 @@ class linked_list
     linked_list<T>() //Aquí tenemos el constructor de la clase
     {
         this->count = 0;
-        this->first = NULL;
-        this->last = NULL;
+        this->first = nullptr;
+        this->last = nullptr;
     }
 
     //Redefinimos el operador =
@@ -135,13 +135,13 @@ class linked_list
 
         if (this->count == 1)    //Si solo tenemos un elemento
         {
-            this->first = NULL; //Eliminamos el first y last
-            this->last = NULL;
+            this->first = nullptr; //Eliminamos el first y last
+            this->last = nullptr;
         }
         else //En otro caso
         {
             this->last = temp->previous; //Dejamos como last al penúltimo nodo
-            this->last->next = NULL;     //Le quitamos el next al último nodo
+            this->last->next = nullptr;     //Le quitamos el next al último nodo
         }
 
         this->count = this->count - 1; //Disminuimos el contador de la cantidad de elementos
@@ -165,22 +165,22 @@ class linked_list
         if (count == 1)  //Si tenemos un solo elemento (y la posición es válida,
         {                //garantizado en el if anterior)
             temp = this->first;  //Guardamos el único elemento
-            this->first = NULL;  //Eliminamos a first y last
-            this->last = NULL;
+            this->first = nullptr;  //Eliminamos a first y last
+            this->last = nullptr;
         }
 
         if (index == 0 && count != 1) //En caso de que haya más de un elemento
         {                             //y se escoja el primero
             temp = this->first;               //Guardamos el primer elemento
             this->first = this->first->next;  //Ahora first será el 2do elemento
-            this->first->previous = NULL;     //Eliminamos al previous de first
+            this->first->previous = nullptr;     //Eliminamos al previous de first
         }
 
         if (index == this->count -1 && count != 1) //En caso de que sea el último elemento
         {                                          //Y haya más de uno (garantizado en casos
             temp = this->last;                     //anteriores), hacemos lo mismo del
             this->last = this->last->previous;     //caso anterior pero con el last
-            this->last->next = NULL;
+            this->last->next = nullptr;
         }
 
         if (index > 0 && index < this->count - 1 && count != 1) //En caso de que no sea
@@ -206,9 +206,9 @@ class linked_list
     //Función para imprimir todos los valores en la lista empezando por el primero
     void Print_Starting_First()
     {
-        if (first != NULL) //Si hay al menos un elemento
+        if (first != nullptr) //Si hay al menos un elemento
         {
-            for (shared_ptr<node<T>> i = this->first; i != NULL; i = i->next) //Iteramos por los nodos
+            for (shared_ptr<node<T>> i = this->first; i != nullptr; i = i->next) //Iteramos por los nodos
             {
                 cout << i->Get_Value(); //Obtenemos su valor y lo imprimimos
                 cout << "\n";
@@ -219,9 +219,9 @@ class linked_list
     //Función para imprimir todos los valores en la lista empezando por el último
     void Print_Starting_Last()  //Hace lo mismo que la función anterior
     {                          //pero en orden inverso
-        if (first != NULL)
+        if (first != nullptr)
         {
-            for (shared_ptr<node<T>> i = this->last; i != NULL; i = i->previous)
+            for (shared_ptr<node<T>> i = this->last; i != nullptr; i = i->previous)
             {
                 cout << i->Get_Value();
                 cout << "\n";
