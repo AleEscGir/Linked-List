@@ -10,8 +10,9 @@ class node
     T value; //Cada nodo posee un valor genérico
 
     public:
-    shared_ptr<node<T>> previous; //Tenemos un puntero al nodo anterior
-    shared_ptr<node<T>> next;     //Y al nodo siguiente 
+    using shared = shared_ptr<node<T>>;
+    shared previous; //Tenemos un puntero al nodo anterior
+    shared next;     //Y al nodo siguiente
     
     node<T>(T in_value) //Tenemos el constructor de la clase
     {
@@ -20,13 +21,31 @@ class node
         this->next = nullptr;
     }
 
-    void operator =(node<T> new_node)
+    node<T>(const node<T> &other_node) //Tenemos el Constructor Copia de la clase
+    {       
+        this.value = other_node.value; //Copia los valores en vez de las referencias
+        this.previous = other_node.previous;
+        this.next = other_node.next;
+    }
+
+    node<T>(node<T>&& other_node) //Tenemos el Constructor Move de la clase
+    {
+        this.value = other_node.value; //Copia los valores en vez de las referencias
+        this.previous = other_node.previous;
+        this.next = other_node.next;
+
+        other_node.value = NULL;       //Eliminamos los valores del nodo de entrada
+        other_node.previous = nullptr;
+        other_node.next = nullptr;
+    }
+
+    void operator =(node<T> new_node) //Sobrecarga del operador =
     {
         this->value = new_node->Get_Value;
         this->previous = new_node->previous;
         this->next = new_node->next;
     }
-
+        
     T Get_Value() //Mediante esta función devolvemos el valor
     {             //guardado en el nodo
         return this->value;
@@ -89,6 +108,24 @@ class linked_list
         this->count = 0;
         this->first = nullptr;
         this->last = nullptr;
+    }
+
+    linked_list<T>(const linked_list<T> &other_list) //Aquí tenemos el Constructor Copia de la clase
+    {
+        this.count = other_list.count;
+        this.first = other_list.first;
+        this.last = other_list.last;
+    }
+
+    linked_list<T>(linked_list<T>&& other_list) //Aquí tenemos el Constructor Move de la clase
+    {
+        this.count = other_list.count;
+        this.first = other_list.first;
+        this.last = other_list.last;
+
+        other_list.count = 0;
+        other_list.first = nullptr;
+        other_list.last = nullptr;
     }
 
     //Redefinimos el operador =
