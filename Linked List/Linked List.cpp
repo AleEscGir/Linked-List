@@ -1,5 +1,7 @@
 
 #include <iostream>;
+#include <algorithm>; //Con esta biblioteca podemos usar el for_each 
+#include <vector>; //Con esta biblioteca podemos usar la clase vector
 
 using namespace std;
 
@@ -45,6 +47,9 @@ class node
         this->previous = new_node->previous;
         this->next = new_node->next;
     }
+
+    //Destructor de la clase
+    ~node() = default;
         
     T Get_Value() //Mediante esta función devolvemos el valor
     {             //guardado en el nodo
@@ -136,6 +141,31 @@ class linked_list
         this->last = list->last;
     }
 
+    //Constructor a partir de List_Inicialization
+    linked_list(initializer_list<T> in_list)
+    { 
+        this->count = 0;
+        this->first = nullptr;
+        this->last = nullptr;
+      //Con for_each vamos por todos los elementos de la lista
+      //y mediante una función lambda los agregamos
+        for_each(in_list.begin(), in_list.end(), [this](T i) {this->Add_Last(i);} );
+    }
+
+    //Constructor a partir de un vector<T>
+    linked_list(vector<T> in_vector)
+    {
+        this->count = 0;
+        this->first = nullptr;
+        this->last = nullptr;
+        //Con for_each vamos por todos los elementos del vector
+        //y mediante una función lambda los agregamos
+        for_each(in_vector.begin(), in_vector.end(), [this](T i) {this->Add_Last(i); });
+    }
+
+    //Destructor de la clase
+    ~linked_list() = default;
+
     //Mediante esta función, dado un índice, devolvemos el valor
     //en el nodo perteneciente a esa posición
     T At(int index)
@@ -152,6 +182,7 @@ class linked_list
         {
             //Guardamos el valor en un nodo, y actualizamos los next
             //y previous de ese nodo y el anterior, y el last de la lista
+            
             shared_ptr<node<T>> temp = shared_ptr<node<T>>(new node<T>(value));
             temp->previous = this->last;        
             this->last->next = temp;
@@ -162,7 +193,7 @@ class linked_list
     }
 
     //Mediante esta función removemos el valor de la lista
-    T Remove_Last()
+    T Remove_Last() noexcept(true)
     {
         if (this->count == 0) //Si no tenemos elementos no procedemos
             return NULL;
@@ -186,7 +217,7 @@ class linked_list
         return value; //Retornamos el valor
     }
 
-    T Remove_At(int index)
+    T Remove_At(int index) noexcept(true)
     {
         //Si no es posible remover un elemento entonces no procedemos
         if (this->count == 0 || index < 0 || index >= this->count)
@@ -234,11 +265,34 @@ class linked_list
         
     }
 
+    
+
     //Función que devuelve la cantidad de elementos que hay en la lista
     int length()
     {
         return this->count;
     }
+
+    //Puntero a función de cantidad variable de argumentos, que devuelve
+    template<typename R, typename... T>
+    using Alias_Function = R (*)(T...);
+
+    //Función que transforma todos los elementos de una linked_list<T> a una linked_list<R>
+    template<typename R, typename T>
+    linked_list<R> Map(Alias_Function<R, T> Transformation_Funtion) //Recibe la función de transformación
+    {
+        linked_list<R> out_list = linked_list(); //Creamos la función que devolveremos
+
+        for (node<T> i = this->first; i != nullptr; i = i->next)
+        {   //Vamos por todos los nodos de nuestra lista
+            
+            //Añadimos todos los nodos transformados a la nueva lista
+            out_list.Add_Last(Transformation_Funtion(i->Get_Value()));
+        }
+
+        return out_list; //Devolvemos la lista
+    }
+
 
     //Función para imprimir todos los valores en la lista empezando por el primero
     void Print_Starting_First()
@@ -286,8 +340,17 @@ int main()
     cout << "\n";
     linked->Print_Starting_Last();
 
-    linked_list<int>* linkes_b = linked;
+    linked_list<int>* linked_b = linked;
 
+    linked_list<int> linked_c = { 1,2,3,4 };
 
+    cout << "\n";
+    linked_c.Print_Starting_First();
+    cout << "\n";
+    linked_c.Print_Starting_Last();
+
+    cout << "\n";
+    linked_list<int>* a = new linked_list<int>(vector<int>({ 1,2,3,4,5 }));
+    a->Print_Starting_First();
     return 0;
 };
